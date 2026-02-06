@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>高知観光マップ</title>
+
+<!-- Leaflet -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Hiragino Maru Gothic ProN", sans-serif;
+  background: #fff6fb;
+}
+
+h1 {
+  text-align: center;
+  color: #ff7eb9;
+  padding: 10px;
+}
+
+#map {
+  height: 70vh;
+}
+
+.popup img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.popup h3 {
+  margin: 5px 0;
+  color: #ff7eb9;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🗾 高知観光マップ</h1>
+<div id="map"></div>
+
+<script>
+// 地図初期化（高知）
+const map = L.map('map').setView([33.5597, 133.5311], 9);
+
+// Google風タイル
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// 観光スポット
+const spots = [
+const spots = [
+  // ===== 観光 =====
+  {
+    name: "高知城",
+    lat: 33.5590,
+    lng: 133.5313,
+    tag: "観光",
+    img: "https://upload.wikimedia.org/wikipedia/commons/7/73/Kochi_Castle.jpg",
+    link: "https://kochipark.jp/kochijyo/"
+  },
+  {
+    name: "桂浜",
+    lat: 33.4973,
+    lng: 133.5767,
+    tag: "自然",
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/9b/Katsurahama.jpg",
+    link: "https://www.city.kochi.kochi.jp/soshiki/92/katsurahama.html"
+  },
+
+  // ===== ミュージアム =====
+  {
+    name: "牧野植物園",
+    lat: 33.5795,
+    lng: 133.5584,
+    tag: "自然",
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Makino_Botanical_Garden.jpg",
+    link: "https://www.makino.or.jp/"
+  },
+  {
+    name: "アンパンマンミュージアム",
+    lat: 33.6031,
+    lng: 133.6866,
+    tag: "ミュージアム",
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Anpanman_Museum_Kochi.jpg",
+    link: "https://anpanman-museum.net/"
+  },
+
+  // ===== ご飯 =====
+  {
+    name: "ひろめ市場",
+    lat: 33.5594,
+    lng: 133.5315,
+    tag: "ご飯",
+    img: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Hirome_Ichiba.jpg",
+    link: "https://hirome.co.jp/"
+  },
+  {
+    name: "葉山",
+    lat: 33.5602,
+    lng: 133.5319,
+    tag: "ご飯",
+    img: "https://images.unsplash.com/photo-1555992336-03a23c9f14a1",
+    link: "https://tabelog.com/"
+  },
+
+  // ===== Cafe（大量）=====
+  {
+    name: "土佐茶カフェ",
+    lat: 33.5606,
+    lng: 133.5325,
+    tag: "Cafe",
+    img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
+    link: "https://www.instagram.com/"
+  },
+  {
+    name: "帯屋町カフェ ORIGAMI",
+    lat: 33.5608,
+    lng: 133.5322,
+    tag: "Cafe",
+    img: "https://images.unsplash.com/photo-1521017432531-fbd92d768814",
+    link: "https://www.instagram.com/"
+  },
+  {
+    name: "Cafe CLEF",
+    lat: 33.5611,
+    lng: 133.5330,
+    tag: "Cafe",
+    img: "https://images.unsplash.com/photo-1511920170033-f8396924c348",
+    link: "https://www.instagram.com/"
+  },
+  {
+    name: "土佐茶寮",
+    lat: 33.5589,
+    lng: 133.5308,
+    tag: "Cafe",
+    img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
+    link: "https://www.instagram.com/"
+  },
+
+  // ===== 雑貨屋 =====
+  {
+    name: "雑貨屋 copan",
+    lat: 33.5615,
+    lng: 133.5336,
+    tag: "観光",
+    img: "https://images.unsplash.com/photo-1526045612212-70caf35c14df",
+    link: "https://www.instagram.com/"
+  },
+  {
+    name: "土佐和紙雑貨店",
+    lat: 33.5598,
+    lng: 133.5302,
+    tag: "観光",
+    img: "https://images.unsplash.com/photo-1500336624523-d727130c3328",
+    link: "https://www.instagram.com/"
+  },
+
+  // ===== ちょい郊外 =====
+  {
+    name: "仁淀ブルー",
+    lat: 33.6413,
+    lng: 133.1740,
+    tag: "自然",
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Niyodo_Blue.jpg",
+    link: "https://niyodoblue.jp/"
+  }
+];
+// ピン配置
+spots.forEach(s => {
+  L.marker([s.lat, s.lng])
+    .addTo(map)
+    .bindPopup(`
+      <div class="popup">
+        <h3>${s.name}</h3>
+        <img src="${s.img}">
+        <a href="${s.link}" target="_blank">詳細を見る</a>
+      </div>
+    `);
+});
+</script>
+
+</body>
+</html>
